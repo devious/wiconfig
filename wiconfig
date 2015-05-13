@@ -266,7 +266,7 @@ function scan {
 		# MAC
 		echo -n "|$4" >> $output
 		# Signal quality
-		printf "|%02d" ${5%dB} >> $output
+		printf "|%02d" ${5%dBm} >> $output
 		# Speed
 		echo -n "|$6" >> $output
 		# Options
