@@ -278,7 +278,7 @@ function scan {
 	# Wireless network(s) found
 	if [ -s "$output" ]; then
 		# Sort nwids by greatest signal quality
-		sort -brk 4 -o "$input" -t "|" "$output"
+		sort -rk 4 -o "$input" -t "|" "$output"
 	else
 		if ! $quiet; then
 			rescan
