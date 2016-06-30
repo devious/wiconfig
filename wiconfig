@@ -23,7 +23,7 @@
 #	wiconfig - simplifies the configuration of wireless interfaces 
 #
 # SYNOPSIS
-#	wiconfig [-dqs] interface
+#	wiconfig [-dnqs] interface
 #
 # EXAMPLE
 #	Manually configure a wireless interface
@@ -82,7 +82,7 @@ seconds=3
 wiconfigdb="/etc/wiconfig.db"
 
 function usage {
-	echo "usage: $myname [-dqs] interface"
+	echo "usage: $myname [-dnqs] interface"
 	exit 1
 }
 
@@ -357,7 +357,9 @@ function configure {
 	# Apparently we need to use eval and single quotes to handle nwids with
 	# spaces
 	eval ifconfig $if nwid \'$1\' $2 up > /dev/null 2>&1
-	dhclient $if
+	if [ ! $nodhcp ]; then
+		dhclient $if
+	fi
 }
 
 function reconnect {
@@ -441,7 +443,9 @@ function determine {
 			exit 1
 		fi
 	fi
-	dhclient $if
+	if [ ! $nodhcp ]; then
+		dhclient $if
+	fi
 }
 
 # Update existing db record, if it exists, or create a new one
@@ -528,9 +532,10 @@ if [ "X$(whoami)" != Xroot ]; then
 	exit 1
 fi
 
-while getopts dqs opt; do
+while getopts dnqs opt; do
 	case $opt in
 		d)	debug=true;;
+		n)	nodhcp=true;;
 		q)	quiet=true;; 
 		s)	status=true;;
 		?)	usage;;
